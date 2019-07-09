@@ -30,7 +30,7 @@
 		</form>
 	</div>
 
-	<div class="col-md-4">
+	<div class="col-md-4" style="position: -webkit-sticky; position: sticky; top: 0;">
 		<h3 class="header smaller lighter green text-right">File's Column</h3>
 		<ul class="list-inline">
 			<cfloop index="column" array="#prc.fileColumn#">

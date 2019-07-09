@@ -89,7 +89,27 @@ component extends="preside.system.base.AdminHandler" {
 	}
 
 	public void function processImportData( event, rc, prc ) {
-		var formData = event.getCollectionForForm();
+		prc.pageTitle    = translateResource( "bulkimport:admin.page.processImportData" );
+		if ( !isEmpty( rc.objects ?: "" ) ) {
+			prc.pageSubTitle = translateResource( "bulkimport:admin.page.#rc.objects#" );
+		} else {
+			rc.objects = translateResource( "bulkimport:admin.page.title" );
+		}
+		prc.pageIcon     = "fa-cloud-upload";
+
+		var fields     = listToArray( rc.fieldnames ?: "" );
+		var fieldsData = {};
+
+		for ( field in fields ) {
+			if ( !isEmpty( rc[ field ] ) ) {
+				var temp = rc[ field ];
+				temp = left ( temp, temp.len()-1 );
+				temp = right( temp, temp.len()-1 );
+				fieldsData[ field ] = temp;
+			}
+		}
+		structDelete( fieldsData, 'file'    );
+		structDelete( fieldsData, 'objects' );
 
 		// get file columns
 		var uploadedFile = presideObjectService.selectData(
@@ -103,11 +123,29 @@ component extends="preside.system.base.AdminHandler" {
 		if ( uploadedFile.recordcount ) {
 			path           = ExpandPath('./') & 'uploads/assets' & uploadedFile.storage_path;
 			var fileData   = spreadsheetLib.csvToQuery( filepath=path, firstRowIsHeader=true );
-			prc.fileColumn = queryColumnArray( fileData );
+
+			for ( row in fileData ) {
+				var insertData = {};
+
+				for ( field in fieldsData ) {
+					insertData[ field ] = row[ fieldsData[field] ];
+				}
+				try {
+					var dataInserted = presideObjectService.insertData(
+						  objectName = rc.objects
+						, data       = insertData
+					)
+				} catch(any exception){
+					// skip import current record
+				}
+			}
+			if ( !isEmpty( dataInserted ?: "" ) ) {
+				prc.success = true;
+			}
 		}
 
 		event.addAdminBreadCrumb(
-			  title = translateResource( "bulkimport:admin.page.processImport"  )
+			  title = translateResource( "bulkimport:admin.page.processImportData"  )
 			, link  = event.buildAdminLink( linkTo="bulkimport.processImportData" )
 		);
 	}
