@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<form i18nBaseUri="forms.importOptionForm:">
+	<tab id="object">
+		<fieldset id="object">
+			<field name="objects" control="ImportObjectPicker" multiple="false" required="true" />
+			<field name="file"    control="assetPicker"        allowedTypes="csv" maxFileSize="5" required="true" />
+		</fieldset>
+	</tab>
+</form>

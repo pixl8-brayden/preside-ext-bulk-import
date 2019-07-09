@@ -1,12 +1,4 @@
 component {
-
-	/**
-	 * This extension Config.cfc has been scaffolded by the Preside
-	 * Scaffolding service.
-	 *
-	 * Override or append to core Preside/Coldbox settings here.
-	 *
-	 */
 	public void function configure( required struct config ) {
 		// core settings that will effect Preside
 		var settings            = arguments.config.settings            ?: {};
@@ -20,6 +12,10 @@ component {
 		var wirebox             = arguments.config.wirebox             ?: {};
 		var logbox              = arguments.config.logbox              ?: {};
 		var environments        = arguments.config.environments        ?: {};
+
+		// bulk import
+		settings.features.bulkimport.enabled = true;
+		settings.adminSideBarItems.append( "bulkimport" );
 
 	}
 }
