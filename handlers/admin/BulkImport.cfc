@@ -97,6 +97,10 @@ component extends="preside.system.base.AdminHandler" {
 		}
 		prc.pageIcon     = "fa-cloud-upload";
 
+		if ( isEmpty( rc.file ?: "" ) ) {
+			setNextEvent( url = event.buildAdminLink( linkTo="bulkimport.index" ) );
+		}
+
 		var fields     = listToArray( rc.fieldnames ?: "" );
 		var fieldsData = {};
 
