@@ -14,7 +14,13 @@
 		<form id="import-form" data-auto-focus-form="true" data-dirty-form="protect" class="form-horizontal" method="post" action="#event.buildAdminLink( linkto="bulkimport.processImportData" )#">
 
 			<cfloop index="field" array=#prc.importObjectColumns#>
-				#renderFormControl( name=field, id=field, type="textinput", label=ucFirst( replace( field, "_", " ", "ALL" ) ) )#
+				#renderFormControl(
+					  name     = field[ "fieldName" ]
+					, id       = field[ "fieldName" ]
+					, type     = "textInput"
+					, label    = ucFirst( replace( field[ "fieldName" ], "_", " ", "ALL" ) )
+					, required = field[ "required" ]
+				)#
 			</cfloop>
 
 			#renderFormControl( name="objects", id="objects", type="hidden", defaultValue=( rc.objects ?: "" ), layout="formcontrols.layouts.hiddenField" )#

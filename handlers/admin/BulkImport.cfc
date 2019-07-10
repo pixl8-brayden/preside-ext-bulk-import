@@ -26,7 +26,7 @@ component extends="preside.system.base.AdminHandler" {
 	public void function import( event, rc, prc ) {
 		prc.pageTitle           = translateResource( "bulkimport:admin.page.title"    );
 		if ( !isEmpty( rc.objects ?: "" ) ) {
-			prc.pageSubTitle = translateResource( "bulkimport:admin.page.#rc.objects#" );
+			prc.pageSubTitle = "Bulk import " & replace( rc.objects, "_", " ", "ALL" );
 		} else {
 			rc.objects = translateResource( "bulkimport:admin.page.title" );
 		}
@@ -55,13 +55,20 @@ component extends="preside.system.base.AdminHandler" {
 			if ( left(data, 1) NEQ '_' ) {
 				switch( data ) {
 				case "datecreated":
-					break;
 				case "datemodified":
-					break;
 				case "id":
 					break;
 				default:
-					prc.importObjectColumns.append(data);
+					var propertyData     = {};
+					var propertyRequired = presideObjectService.getObjectPropertyAttribute(
+						  objectName    = rc.objects
+						, propertyName  = data
+						, attributeName = "required"
+					)
+					propertyData.fieldName = data;
+					propertyData.required  = propertyRequired;
+
+					prc.importObjectColumns.append(propertyData);
 					break;
 				}
 			}
@@ -83,7 +90,7 @@ component extends="preside.system.base.AdminHandler" {
 		}
 
 		event.addAdminBreadCrumb(
-			  title = translateResource( "bulkimport:admin.page.#rc.objects#"  )
+			  title = "Bulk import " & replace( rc.objects, "_", " ", "ALL" )
 			, link  = event.buildAdminLink( linkTo="bulkimport.import" )
 		);
 	}
@@ -91,7 +98,7 @@ component extends="preside.system.base.AdminHandler" {
 	public void function processImportData( event, rc, prc ) {
 		prc.pageTitle    = translateResource( "bulkimport:admin.page.processImportData" );
 		if ( !isEmpty( rc.objects ?: "" ) ) {
-			prc.pageSubTitle = translateResource( "bulkimport:admin.page.#rc.objects#" );
+			prc.pageSubTitle = "Bulk import " & replace( rc.objects, "_", " ", "ALL" );
 		} else {
 			rc.objects = translateResource( "bulkimport:admin.page.title" );
 		}
